@@ -73,40 +73,40 @@ class spotifyPlayer:
     def change_genre(self,state):
         self.stop()
         if state == 'a':
-            self.play_playlist('genre:pop')
+            self.play_playlist('genre:EDM')
         elif state == 'b':
-            self.play_playlist('genre:rock')
+            self.play_playlist('genre:"singer/songwriter"')
         elif state == 'c':
-            self.play_playlist('genre:"alternative pop/rock"')
-        elif state == 'd':
-            self.play_playlist('genre:reggae')
-        elif state == 'e':
-            self.play_playlist('genre:jazz')
-        elif state == 'f':
-            self.play_playlist('genre:"dub step"')
-        elif state == 'g':
-            self.play_playlist('genre:rap')
-        elif state == 'h':
-            self.play_playlist('genre:metal')
-        elif state == 'i':
-            self.play_playlist('genre:pop')
-        elif state == 'j':
-            self.play_playlist('artist:matoma')
-        elif state == 'k':
-            self.play_playlist('genre:world')
-        elif state == 'l':
             self.play_playlist('genre:"big band"')
+        elif state == 'd':
+            self.play_playlist('genre:ambient')
+        elif state == 'e':
+            self.play_playlist('genre:blues')
+        elif state == 'f':
+            self.play_playlist('genre:classical')
+        elif state == 'g':
+            self.play_playlist('genre:funk')
+        elif state == 'h':
+            self.play_playlist('genre:jazz')
+        elif state == 'i':
+            self.play_playlist('genre:reggae')
+        elif state == 'j':
+            self.play_playlist('genre:pop')
+        elif state == 'k':
+            self.play_playlist('genre:metal')
+        elif state == 'l':
+            self.play_playlist('genre:R&B')
         elif state == 'm':
-            self.play_playlist('genre:house')
-        elif state == 'n':
-            self.play_playlist('genre:medieval')
-        elif state == 'o':
-            self.play_playlist('genre:gospel')
-        elif state == 'p':
             self.play_playlist('genre:"hip-hop"')
+        elif state == 'n':
+            self.play_playlist('genre:soul')
+        elif state == 'o':
+            self.play_playlist('genre:world')
+        elif state == 'p':
+            self.play_playlist('genre:electronica')
         elif state == 'q':
-            self.play_playlist('genre:orchestral')
+            self.play_playlist('genre:dubstep')
         elif state == 'r':
-            self.play_playlist('genre:soundtrack')
+            self.play_playlist('genre:hardrock')
         elif state == 's':
-            self.play_playlist('genre:tropical')
+            self.play_playlist('genre:indierock')
