@@ -1,16 +1,31 @@
 # -*- coding: utf-8 -*-
 from sPlayer import spotifyPlayer
-#from timer import Timer
-
-#sensorinput kommer her
+import random
+import serial
+from threading import Thread
+import threading
 
 player = spotifyPlayer()
-playlist = player.generate_playlist('genre:pop')
-print "Playlist lenght:", playlist.__len__() #printer ut lengden på playlisten
-player.play_song(playlist[1]) #Hvis du kaller denne i while loopen så vil den prøve å spille på nytt og på nytt og vil da ikke spille noe
+port = serial.Serial("/dev/tty.usbmodemfd121", 9600, timeout=10)
+#port = serial.Serial("/dev/tty.usbmodem1411", 9600, timeout=10)
+letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s']
 
-#gjerne lag en funksjon dere kaller play_playlist i klassen eller her
-#er ikke helt stabil så dere kan jo prøve å se om det er noen ting dere kan fikse.
+def read():
+    if (port.inWaiting() > 0):
+        line = port.readline()
+        line = line.rstrip()
+        if line in letters:
+            return line
+
+state = read()
+previousState = 0
 
 while(1):
-	pass
+    state = read()
+    if state != None:
+        if previousState != state:
+            print state
+            thread = Thread(target = player.change_genre, args = (state))
+            thread.start()
+
+        previousState = state
