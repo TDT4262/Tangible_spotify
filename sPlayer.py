@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import spotify
 import random
 import threading
@@ -35,55 +34,78 @@ class SpotifyPlayer(object):
         self.playlist = Playlist(session)
         self.player = Player(session, self.playlist)
 
-        # Handle next song
+        print 'ok' 
+
+        self.edm = self.playlist.new_playlist('genre:EDM')
+        self.singerSongwriter = self.playlist.new_playlist('genre:"singer/songwriter"')
+        self.bigBand = self.playlist.new_playlist('genre:"big band"')
+        self.ambient = self.playlist.new_playlist('genre:ambient')
+        self.blues = self.playlist.new_playlist('genre:blues')
+        self.classical = self.playlist.new_playlist('genre:classical')
+        self.funk = self.playlist.new_playlist('genre:funk')
+        self.jazz = self.playlist.new_playlist('genre:jazz')
+        self.reggae = self.playlist.new_playlist('genre:reggae')
+        self.pop = self.playlist.new_playlist('genre:pop')
+        self.metal = self.playlist.new_playlist('genre:metal')
+        self.rnb = self.playlist.new_playlist('genre:R&B')
+        self.hipHop = self.playlist.new_playlist('genre:"hip-hop"')
+        self.soul = self.playlist.new_playlist('genre:soul')
+        self.world = self.playlist.new_playlist('genre:world')
+        self.electronica = self.playlist.new_playlist('genre:electronica')
+        self.dubstep = self.playlist.new_playlist('genre:dubstep')
+        self.hardrock = self.playlist.new_playlist('genre:hardrock')
+        self.indierock = self.playlist.new_playlist('genre:indierock')
+        print 'success'
+
+        # Handle next song in the same playlist
         session.on(spotify.SessionEvent.END_OF_TRACK, self.player.next_song)
 
     def play_playlist(self, genre):
+        print "Marianne er et geni"
         start_time = time.time()
-        #self.playlist.new_playlist(genre)
+        self.genre = genre
         self.player.next_song()
-        print genre
         print 'Time elapsed: ' + str(time.time() - start_time)
         
     def change_genre(self, state):
         if state == 'a':
-            self.play_playlist('genre:EDM')
+            self.play_playlist(self.edm)
         elif state == 'b':
-            self.play_playlist('genre:"singer/songwriter"')
+            self.play_playlist(self.singerSongwriter)
         elif state == 'c':
-            self.play_playlist('genre:"big band"')
+            self.play_playlist(self.bigBand)
         elif state == 'd':
-            self.play_playlist('genre:ambient')
+            self.play_playlist(self.ambient)
         elif state == 'e':
-            self.play_playlist('genre:blues')
+            self.play_playlist(self.blues)
         elif state == 'f':
-            self.play_playlist('genre:classical')
+            self.play_playlist(self.classical)
         elif state == 'g':
-            self.play_playlist('genre:funk')
+            self.play_playlist(self.funk)
         elif state == 'h':
-            self.play_playlist('genre:jazz')
+            self.play_playlist(self.jazz)
         elif state == 'i':
-            self.play_playlist('genre:reggae')
+            self.play_playlist(self.reggae)
         elif state == 'j':
-            self.play_playlist('genre:pop')
+            self.play_playlist(self.pop)
         elif state == 'k':
-            self.play_playlist('genre:metal')
+            self.play_playlist(self.metal)
         elif state == 'l':
-            self.play_playlist('genre:R&B')
+            self.play_playlist(self.rnb)
         elif state == 'm':
-            self.play_playlist('genre:"hip-hop"')
+            self.play_playlist(self.hipHop)
         elif state == 'n':
-            self.play_playlist('genre:soul')
+            self.play_playlist(self.soul)
         elif state == 'o':
-            self.play_playlist('genre:world')
+            self.play_playlist(self.world)
         elif state == 'p':
-            self.play_playlist('genre:electronica')
+            self.play_playlist(self.electronica)
         elif state == 'q':
-            self.play_playlist('genre:dubstep')
+            self.play_playlist(self.dubstep)
         elif state == 'r':
-            self.play_playlist('genre:hardrock')
+            self.play_playlist(self.hardrock)
         elif state == 's':
-            self.play_playlist('genre:indierock')
+            self.play_playlist(self.indierock)
         elif state == 't':
             print "Stopped"
             self.player.stop()
@@ -101,7 +123,7 @@ class Player(object):
     def stop(self):
         self.session.player.unload()
 
-    def next_song(self, s=None):
+    def next_song(self, s=None): #hvorfor s=None, må den være der?
         self.stop()
         self.play_song(self.playlist.next_song())
 
@@ -132,8 +154,8 @@ class Playlist(object):
         self.playlist = search.tracks
         
     def next_song(self):
-        if not self.playlist:
-            return None
+        #if not self.playlist:
+            #return None
         song = self.playlist[self.index]
         self.index += 1
         if self.index >= len(self.playlist):
