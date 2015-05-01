@@ -1,77 +1,51 @@
 # -*- coding: utf-8 -*-
+
 import spotify
-import time
 import random
 import threading
-import serial
+import time
 
-end_of_track = threading.Event()
-
-class spotifyPlayer:
-
+class SpotifyPlayer(object):
     def __init__(self):
 
-        def on_end_of_track(self):
-            end_of_track.set()
-            print "End of track", end_of_track.isSet()
+        # Events
+        logged_in_event = threading.Event()
 
-        self.session = spotify.Session()
-        self.session.login('klevemar', '#TDT*4262', True)
-        while self.session.connection.state != True :
-            self.session.process_events()
-            pass
-        audio = spotify.PortAudioSink(self.session)
-        loop = spotify.EventLoop(self.session)
+        # Session
+        session = spotify.Session()
+        session.preferred_bitrate(2)  # 160 kib/s
+        loop = spotify.EventLoop(session)
         loop.start()
-        self.end_of_track = end_of_track 
-        self.session.on(spotify.SessionEvent.END_OF_TRACK, on_end_of_track)
 
-    def generate_playlist(self,q):
-        random_start = random.randint(0,10)
-        #print "random start", random_start
-        random_amount = random.randint(40,100)
-        search = self.session.search(q, None, random_start, random_amount)
-        search.load()
-        return search.tracks
+        # Event functions
+        def connection_state_listener(session):
+            if session.connection.state is spotify.ConnectionState.LOGGED_IN:
+                logged_in_event.set()
 
-    def play_song(self, track):
-        track.load()
-        artists = track.artists
-        print 'Track name:', track.name
-        for i in artists:
-            print 'Artist:',i.name
-        print 'Album:', track.album.name
-        self.session.player.load(track)
-        self.session.player.play()
-        self.session.process_events()
+        # Login
+        session.on(
+            spotify.SessionEvent.CONNECTION_STATE_UPDATED,
+            connection_state_listener
+        )
+        session.login('klevemar', '#TDT*4262')
+        while not logged_in_event.wait(0.1):
+            session.process_events()  # waits until the login is complete
 
-    def check_playing(self):
-        self.session.process_events()
-        return self.session.player.state
+        # Create playlist
+        self.playlist = Playlist(session)
+        self.player = Player(session, self.playlist)
 
-    def stop(self):
-        self.session.player.unload()
+        # Handle next song
+        session.on(spotify.SessionEvent.END_OF_TRACK, self.player.next_song)
 
-    def play_playlist(self,query):
-        playlist = self.generate_playlist(query)
-        len_playlist = len(playlist)
-        print 'Lenght playlist:', len_playlist
-        random_song = random.randint(0,(len_playlist-1))
-        #print 'Random song:',random_song
-        song = playlist[random_song]
-        self.play_song(song)
-        while 1:
-            if self.end_of_track.isSet():
-                new_random_song = random.randint(0,(len_playlist-1))
-                if new_random_song != random_song:
-                    random_song = new_random_song
-                else:
-                    random_song = new_random_song-1
-                self.play_song(playlist[random_song])
-                self.end_of_track.clear()
-            
-    def change_genre(self,state):
-        self.stop()
+    def play_playlist(self, genre):
+        start_time = time.time()
+        #self.playlist.new_playlist(genre)
+        self.player.next_song()
+        print genre
+        print 'Time elapsed: ' + str(time.time() - start_time)
+        
+    def change_genre(self, state):
         if state == 'a':
             self.play_playlist('genre:EDM')
         elif state == 'b':
@@ -110,3 +84,58 @@ class spotifyPlayer:
             self.play_playlist('genre:hardrock')
         elif state == 's':
             self.play_playlist('genre:indierock')
+        elif state == 't':
+            print "Stopped"
+            self.player.stop()
+
+class Player(object):
+    def __init__(self, session, playlist):
+        assert isinstance(session, spotify.Session)
+        assert isinstance(playlist, Playlist)
+
+        self.session = session
+        self.playlist = playlist
+
+        self.audio = spotify.PortAudioSink(session)
+
+    def stop(self):
+        self.session.player.unload()
+
+    def next_song(self, s=None):
+        self.stop()
+        self.play_song(self.playlist.next_song())
+
+    def play_song(self, track):
+        track.load()
+        print 'Track name: {0}'.format(track.name)
+        #print'Artist(s): {0}'.format(', '.join([str(artist.name) for artist in track.artists]))
+        #print 'Album: {0}'.format(track.album.name)
+        self.session.player.load(track)
+        self.session.player.play()
+        self.session.process_events()
+
+class Playlist(object):
+    def __init__(self, session):
+        self.index = 0
+        self.session = session
+        self.playlist = list()
+        self.genre = None
+
+    def new_playlist(self, genre):
+        self.genre = genre
+
+        random_start = random.randint(0, 10)
+        random_amount = random.randint(40, 100)
+
+        search = self.session.search(genre, None, random_start, random_amount)
+        search.load()
+        self.playlist = search.tracks
+        
+    def next_song(self):
+        if not self.playlist:
+            return None
+        song = self.playlist[self.index]
+        self.index += 1
+        if self.index >= len(self.playlist):
+            self.index = 0
+        return song
