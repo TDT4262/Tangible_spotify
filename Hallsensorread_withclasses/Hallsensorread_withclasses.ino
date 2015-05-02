@@ -22,7 +22,7 @@ HallSensor Hall18(51);
 HallSensor Hall19(52);
 HallSensor Hall20(53);
 
-RGBTools rgb(3,4,5);
+RGBTools rgb(11,12,13);
 int fadeSteps = 20;
 int fadeTime = 500;
 
@@ -35,103 +35,103 @@ void loop() {
 if (Hall1.MagnetIsHere() == true)
   {
   Serial.println(Hall1.Letter());
-  rgb.fadeTo(153,51,255,fadeSteps,fadeTime); //blålilla: EDM
+  rgb.fadeTo(70,204,0,fadeSteps,fadeTime); //A blålilla: EDM
   }
 if (Hall2.MagnetIsHere() == true)
   {
   Serial.println(Hall2.Letter());
-  rgb.fadeTo(255,255,102,fadeSteps,fadeTime); //f.gul: SINGER SONGWRITER
+  rgb.fadeTo(0,53,200,fadeSteps,fadeTime); //B f.gul: SINGER SONGWRITER
   }
 if (Hall3.MagnetIsHere() == true)
   {
   Serial.println(Hall3.Letter());
-  rgb.fadeTo(0,255,0,fadeSteps,fadeTime); //grønn: POP
+  rgb.fadeTo(255,0,255,fadeSteps,fadeTime); //C grønn: BIG BAND
   }
 if (Hall4.MagnetIsHere() == true)
   {
   Serial.println(Hall4.Letter());
-  rgb.fadeTo(102,102,255,fadeSteps,fadeTime); //f.blå: AMBIENT
+  rgb.fadeTo(153,153,0,fadeSteps,fadeTime); //D f.blå: AMBIENT
   }
 if (Hall5.MagnetIsHere() == true)
   {
   Serial.println(Hall5.Letter());
-  rgb.fadeTo(0,0,255,fadeSteps,fadeTime); //blå: BLUES
+  rgb.fadeTo(255,255,0,fadeSteps,fadeTime); //E blå: BLUES
   }
 if (Hall6.MagnetIsHere() == true)
   {
   Serial.println(Hall6.Letter());
-  rgb.fadeTo(102,255,102,fadeSteps,fadeTime); //f.grønn: CLASSICAL
+  rgb.fadeTo(153,0,153,fadeSteps,fadeTime); //F f.grønn: CLASSICAL
   }
 if (Hall7.MagnetIsHere() == true)
   {
   Serial.println(Hall7.Letter());
-  rgb.fadeTo(215,83,35,fadeSteps,fadeTime); //rødoransje: FUNK
+  rgb.fadeTo(0,235,255,fadeSteps,fadeTime); //G rødoransje: FUNK
   }
 if (Hall8.MagnetIsHere() == true)
   {
   Serial.println(Hall8.Letter());
-  rgb.fadeTo(51,255,255,fadeSteps,fadeTime); //blågrønn: JAZZ
+  rgb.fadeTo(204,0,0,fadeSteps,fadeTime); //H blågrønn: JAZZ
   }
 if (Hall9.MagnetIsHere() == true)
   {
   Serial.println(Hall9.Letter());
-  rgb.fadeTo(255,255,0,fadeSteps,fadeTime); //gul: REGGAE
+  rgb.fadeTo(0,153,255,fadeSteps,fadeTime); //I gul: REGGAE
   }
 if (Hall10.MagnetIsHere() == true)
   {
   Serial.println(Hall10.Letter());
-  rgb.fadeTo(255,255,255,fadeSteps,fadeTime); //hvit: TOP 50
+  rgb.fadeTo(0,77,153,fadeSteps,fadeTime); //J hvit: POP
   }
 if (Hall11.MagnetIsHere() == true)
   {
   Serial.println(Hall11.Letter());
-  rgb.fadeTo(255,0,0,fadeSteps,fadeTime); //rød: METALL
+  rgb.fadeTo(0,255,255,fadeSteps,fadeTime); //K rød: METAL
   }
 if (Hall12.MagnetIsHere() == true)
   {
   Serial.println(Hall12.Letter());
-  rgb.fadeTo(232,170,26,fadeSteps,fadeTime); //guloransje: RNB
+  rgb.fadeTo(0,200,255,fadeSteps,fadeTime); //L guloransje: R&B
   }
 if (Hall13.MagnetIsHere() == true)
   {
   Serial.println(Hall13.Letter());
-  rgb.fadeTo(255,128,0,fadeSteps,fadeTime); //oransje: HIP-HOP
+  rgb.fadeTo(0,220,255,fadeSteps,fadeTime); //M oransje: HIP-HOP
   }
 if (Hall14.MagnetIsHere() == true)
   {
   Serial.println(Hall14.Letter());
-  rgb.fadeTo(255,178,102,fadeSteps,fadeTime); //f.oransje: SOUL
+  rgb.fadeTo(30,200,255,fadeSteps,fadeTime); //N f.oransje: SOUL
   }
 if (Hall15.MagnetIsHere() == true)
   {
   Serial.println(Hall15.Letter());
-  rgb.fadeTo(153,255,51,fadeSteps,fadeTime); //gulgrønn: WORLD
+  rgb.fadeTo(0,102,255,fadeSteps,fadeTime); //O gulgrønn: WORLD
   }
 if (Hall16.MagnetIsHere() == true)
   {
   Serial.println(Hall16.Letter());
-  rgb.fadeTo(255,102,255,fadeSteps,fadeTime); //f.lilla: ELECTRONICA
+  rgb.fadeTo(0,153,0,fadeSteps,fadeTime); //P f.lilla: ELECTRONICA
   }
 if (Hall17.MagnetIsHere() == true)
   {
   Serial.println(Hall17.Letter());
-  rgb.fadeTo(255,0,255,fadeSteps,fadeTime); //lilla: DUBSTEP
+  rgb.fadeTo(0,204,0,fadeSteps,fadeTime); //Q lilla: DUBSTEP
   }
 if (Hall18.MagnetIsHere() == true)
   {
   Serial.println(Hall18.Letter());
-  rgb.fadeTo(255,51,153,fadeSteps,fadeTime); //fiolett: HARDROCK
+  rgb.fadeTo(0,204,153,fadeSteps,fadeTime); //R fiolett: HARDROCK
   }
 if (Hall19.MagnetIsHere() == true)
   {
   Serial.println(Hall19.Letter());
-  rgb.fadeTo(255,102,102,fadeSteps,fadeTime); //f.rød: ROCK
+  rgb.fadeTo(0,225,240,fadeSteps,fadeTime); //S f.rød: ROCK
   }
-/*if (Hall20.MagnetIsHere() == true)
+if (Hall20.MagnetIsHere() == true)
   {
   Serial.println(Hall20.Letter());
-  //rgb.fadeTo(0,0,0,fadeSteps,fadeTime); //ingen lyd
-  }*/
+  rgb.fadeTo(255,255,255,fadeSteps,fadeTime); //T ingen lys, ingen lyd
+  }
 
 else {
   Serial.println("null");
