@@ -34,8 +34,6 @@ class SpotifyPlayer(object):
         self.playlist = Playlist(session)
         self.player = Player(session, self.playlist)
 
-        print 'ok' 
-
         self.edm = self.playlist.new_playlist('genre:EDM')
         self.singerSongwriter = self.playlist.new_playlist('genre:"singer/songwriter"')
         self.bigBand = self.playlist.new_playlist('genre:"big band"')
@@ -62,8 +60,8 @@ class SpotifyPlayer(object):
 
     def play_playlist(self, genre):
         start_time = time.time()
-        self.genre = genre
-        self.player.next_song()
+        self.playlist = genre
+        self.player.next_song(self.playlist)
         print 'Time elapsed: ' + str(time.time() - start_time)
         
     def change_genre(self, state):
@@ -124,15 +122,16 @@ class Player(object):
     def stop(self):
         self.session.player.unload()
 
-    def next_song(self, s=None): #hvorfor s=None, må den være der?
+    def next_song(self, genre): #det stod s = None her, må den være der?
         self.stop()
-        self.play_song(self.playlist.next_song())
+        self.play_song(self.playlist.next_song(genre))
 
     def play_song(self, track):
         track.load()
+        print ''
         print 'Track name: {0}'.format(track.name)
         print'Artist(s): {0}'.format(', '.join([str(artist.name) for artist in track.artists]))
-        #print 'Album: {0}'.format(track.album.name)
+        print 'Album: {0}'.format(track.album.name)
         self.session.player.load(track)
         self.session.player.play()
         self.session.process_events()
@@ -143,24 +142,23 @@ class Player(object):
 
 class Playlist(object):
     def __init__(self, session):
-        self.index = 0
+        self.index = 0 #kommer denne til å bli satt til 0 hver gang en funksjon
+        # i denne klassen kalles?
         self.session = session
         self.playlist = list()
         self.genre = None
 
     def new_playlist(self, genre):
-        self.genre = genre
-
+        #self.genre = genre
         random_start = random.randint(0, 10)
         random_amount = random.randint(40, 100)
-
         search = self.session.search(genre, None, random_start, random_amount)
         search.load()
-        self.playlist = search.tracks
+        return search.tracks
         
-    def next_song(self):
-        #if not self.playlist:
-            #return None
+    def next_song(self, genre):
+        self.playlist = genre
+        print self.playlist
         song = self.playlist[self.index]
         self.index += 1
         if self.index >= len(self.playlist):
