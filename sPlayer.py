@@ -10,7 +10,7 @@ class SpotifyPlayer(object):
         # Events
         logged_in_event = threading.Event()
 
-        # Session
+        # Create a Spotify session
         session = spotify.Session()
         session.preferred_bitrate(2)  # 160 kib/s
         loop = spotify.EventLoop(session)
@@ -55,13 +55,12 @@ class SpotifyPlayer(object):
         self.dubstep = self.playlist.new_playlist('genre:dubstep')
         self.hardrock = self.playlist.new_playlist('genre:hardrock')
         self.indierock = self.playlist.new_playlist('genre:indierock')
-        print 'success'
+        print '100 % lastet, klar til bruk'
 
         # Handle next song in the same playlist
         session.on(spotify.SessionEvent.END_OF_TRACK, self.player.next_song)
 
     def play_playlist(self, genre):
-        print "Marianne er et geni"
         start_time = time.time()
         self.genre = genre
         self.player.next_song()
@@ -109,6 +108,8 @@ class SpotifyPlayer(object):
         elif state == 't':
             print "Stopped"
             self.player.stop()
+        elif state =='u':
+            self.player.add_to_starred(self.track)
 
 class Player(object):
     def __init__(self, session, playlist):
@@ -130,11 +131,15 @@ class Player(object):
     def play_song(self, track):
         track.load()
         print 'Track name: {0}'.format(track.name)
-        #print'Artist(s): {0}'.format(', '.join([str(artist.name) for artist in track.artists]))
+        print'Artist(s): {0}'.format(', '.join([str(artist.name) for artist in track.artists]))
         #print 'Album: {0}'.format(track.album.name)
         self.session.player.load(track)
         self.session.player.play()
         self.session.process_events()
+
+    def add_to_starred(self, track):
+        track.starred = True
+        print 'Track starred'
 
 class Playlist(object):
     def __init__(self, session):
