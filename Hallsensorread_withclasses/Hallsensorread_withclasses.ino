@@ -144,6 +144,7 @@ if (Hall20.MagnetIsHere() == true)
 if(digitalRead(button)==HIGH)
   {
   Serial.println('u'); //U knapp: stjernemarkering av sang
+  rgb.fadeTo(255,255,255,fadeSteps,fadeTime);
   }
 else {
   Serial.println("null"); //Printer 'null' om ingenting ovenfor trigges
