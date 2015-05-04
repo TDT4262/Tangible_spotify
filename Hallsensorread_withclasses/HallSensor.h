@@ -1,7 +1,5 @@
 #include "Arduino.h"
 
-//extern char LetterList[14];
-
 class HallSensor {
   public:
     HallSensor(int pin);

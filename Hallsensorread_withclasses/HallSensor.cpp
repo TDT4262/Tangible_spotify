@@ -7,7 +7,7 @@ HallSensor::HallSensor(int pin) {
   pinMode(_pin, INPUT);  
 }
 
-bool HallSensor::MagnetIsHere() { 
+bool HallSensor::MagnetIsHere() { //Funksjon som returnerer true når sensoren trigges
    HallState = digitalRead(_pin); 
    if (HallState == LOW) {
        return true; }
@@ -15,9 +15,9 @@ bool HallSensor::MagnetIsHere() {
      return false; }
 }
  
-char HallSensor::Letter() { 
+char HallSensor::Letter() { //Funksjon som gir hver sensor en egen bokstav avhengig av hvilken pin de er koblet til
    char LetterList[23] = "abcdefghijklmnopqrstuv";
-   letter = LetterList[_pin - 34]; //minus 34 fordi Hall1 skal ha bokstaven a (indeks 0)
+   letter = LetterList[_pin - 34]; //Minus 34 fordi det er laveste pin. Hallsensor 1 skal ha bokstaven a (indeks 0)
    return letter;
 }
  

@@ -1,5 +1,9 @@
-#include "HallSensor.h"
-#include <RGBTools.h>
+#include "HallSensor.h" //Klasse for behandling av Hall Sensor input
+#include <RGBTools.h> //Et bibliotek vi har brukt for å styre LED-lyset
+
+/*Oppretter objekter for alle sensorene.
+Hver av disse objektene vil sende en egen bokstav til SerialPort når
+sensorene de er knyttet til registrerer et magnetfelt.*/
 
 HallSensor Hall1(34);
 HallSensor Hall2(35);
@@ -26,11 +30,16 @@ RGBTools rgb(11,12,13);
 int fadeSteps = 20;
 int fadeTime = 500;
 
+const int button = 2; //Knapp for å stjernemarkere sanger
+
+
 void setup() { 
-  Serial.begin(9600);       
+  Serial.begin(9600);   
+  pinMode(button, INPUT);
 }
 
 void loop() {
+ //Lang if-setning som sjekker alle sensor-input og sender bokstaver til SerialPort
   
 if (Hall1.MagnetIsHere() == true)
   {
@@ -130,11 +139,14 @@ if (Hall19.MagnetIsHere() == true)
 if (Hall20.MagnetIsHere() == true)
   {
   Serial.println(Hall20.Letter());
-  rgb.fadeTo(255,255,255,fadeSteps,fadeTime); //T ingen lys, ingen lyd
+  rgb.fadeTo(255,255,255,fadeSteps,fadeTime); //T ingen lys: ingen lyd
   }
-
+if(digitalRead(button)==HIGH)
+  {
+  Serial.println('u'); //U knapp: stjernemarkering av sang
+  }
 else {
-  Serial.println("null");
+  Serial.println("null"); //Printer 'null' om ingenting ovenfor trigges
   }
 
 delay(200);
