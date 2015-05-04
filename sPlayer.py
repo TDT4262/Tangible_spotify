@@ -24,16 +24,19 @@ class SpotifyPlayer(object):
         # Login
         session.on(
             spotify.SessionEvent.CONNECTION_STATE_UPDATED,
-            connection_state_listener
-        )
+            connection_state_listener)
+
         session.login('klevemar', '#TDT*4262')
         while not logged_in_event.wait(0.1):
             session.process_events()  # waits until the login is complete
 
-        # Create playlist
+        #Creating instances of the class
         self.playlist = Playlist(session)
         self.player = Player(session, self.playlist)
+        self.currentTrack = None
+        self.currentPlaylist = None
 
+        # Create playlist
         self.edm = self.playlist.new_playlist('genre:EDM')
         self.singerSongwriter = self.playlist.new_playlist('genre:"singer/songwriter"')
         self.bigBand = self.playlist.new_playlist('genre:"big band"')
@@ -56,58 +59,82 @@ class SpotifyPlayer(object):
         print '100 % lastet, klar til bruk'
 
         # Handle next song in the same playlist
-        session.on(spotify.SessionEvent.END_OF_TRACK, self.player.next_song)
+        session.on(
+            spotify.SessionEvent.END_OF_TRACK, 
+            self.player.next_song)
 
     def play_playlist(self, genre):
-        start_time = time.time()
+        #start_time = time.time()
         self.playlist = genre
-        self.player.next_song(self.playlist)
-        print 'Time elapsed: ' + str(time.time() - start_time)
+        self.currentTrack = self.player.next_song(self.playlist)
+        #print 'Time elapsed: ' + str(time.time() - start_time)
         
     def change_genre(self, state):
         if state == 'a':
-            self.play_playlist(self.edm)
+            self.currentPlaylist = self.edm
+            self.play_playlist(self.currentPlaylist)
         elif state == 'b':
-            self.play_playlist(self.singerSongwriter)
+            self.currentPlaylist = self.singerSongwriter
+            self.play_playlist(self.currentPlaylist)
         elif state == 'c':
-            self.play_playlist(self.bigBand)
+            self.currentPlaylist = self.bigBand
+            self.play_playlist(self.currentPlaylist)
         elif state == 'd':
-            self.play_playlist(self.ambient)
+            self.currentPlaylist = self.ambient
+            self.play_playlist(self.currentPlaylist)
         elif state == 'e':
-            self.play_playlist(self.blues)
+            self.currentPlaylist = self.blues
+            self.play_playlist(self.currentPlaylist)
         elif state == 'f':
-            self.play_playlist(self.classical)
+            self.currentPlaylist = self.classical
+            self.play_playlist(self.currentPlaylist)
         elif state == 'g':
-            self.play_playlist(self.funk)
+            self.currentPlaylist = self.funk
+            self.play_playlist(self.currentPlaylist)
         elif state == 'h':
-            self.play_playlist(self.jazz)
+            self.currentPlaylist = self.jazz
+            self.play_playlist(self.currentPlaylist)
         elif state == 'i':
-            self.play_playlist(self.reggae)
+            self.currentPlaylist = self.reggae
+            self.play_playlist(self.currentPlaylist)
         elif state == 'j':
-            self.play_playlist(self.pop)
+            self.currentPlaylist = self.pop
+            self.play_playlist(self.currentPlaylist)
         elif state == 'k':
-            self.play_playlist(self.metal)
+            self.currentPlaylist = self.metal
+            self.play_playlist(self.currentPlaylist)
         elif state == 'l':
-            self.play_playlist(self.rnb)
+            self.currentPlaylist = self.rnb
+            self.play_playlist(self.currentPlaylist)
         elif state == 'm':
-            self.play_playlist(self.hipHop)
+            self.currentPlaylist = self.hipHop
+            self.play_playlist(self.currentPlaylist)
         elif state == 'n':
-            self.play_playlist(self.soul)
+            self.currentPlaylist = self.soul
+            self.play_playlist(self.currentPlaylist)
         elif state == 'o':
-            self.play_playlist(self.world)
+            self.currentPlaylist = self.world
+            self.play_playlist(self.currentPlaylist)
         elif state == 'p':
-            self.play_playlist(self.electronica)
+            self.currentPlaylist = self.electronica
+            self.play_playlist(self.currentPlaylist)
         elif state == 'q':
-            self.play_playlist(self.dubstep)
+            self.currentPlaylist = self.dubstep
+            self.play_playlist(self.currentPlaylist)
         elif state == 'r':
-            self.play_playlist(self.hardrock)
+            self.currentPlaylist = self.hardrock
+            self.play_playlist(self.currentPlaylist)
         elif state == 's':
-            self.play_playlist(self.indierock)
+            self.currentPlaylist = self.indierock
+            self.play_playlist(self.currentPlaylist)
         elif state == 't':
+
             print "Stopped"
             self.player.stop()
         elif state =='u':
-            self.player.add_to_starred(self.track)
+            if not self.currentTrack == None:
+                self.player.add_to_starred(self.currentTrack)
+            
 
 class Player(object):
     def __init__(self, session, playlist):
@@ -116,40 +143,50 @@ class Player(object):
 
         self.session = session
         self.playlist = playlist
+        self.currentTrack = None
+        self.currentPlaylist = None
 
         self.audio = spotify.PortAudioSink(session)
 
     def stop(self):
         self.session.player.unload()
 
-    def next_song(self, genre): #det stod s = None her, må den være der?
+    def next_song(self, genre, s = None): #Må det stå s = None her?
         self.stop()
-        self.play_song(self.playlist.next_song(genre))
+        self.currentPlaylist = genre
+        self.currentTrack = self.playlist.next_song(genre)
+        self.play_song(self.currentTrack)
+        return self.currentTrack
 
     def play_song(self, track):
         track.load()
         print ''
-        print 'Track name: {0}'.format(track.name)
-        print'Artist(s): {0}'.format(', '.join([str(artist.name) for artist in track.artists]))
-        print 'Album: {0}'.format(track.album.name)
+        try: 
+            print 'Track name: {0}'.format(track.name)
+            print'Artist(s): {0}'.format(', '.join([str(artist.name) for artist in track.artists]))
+            print 'Album: {0}'.format(track.album.name)
+        except UnicodeEncodeError:
+            print track.name
         self.session.player.load(track)
         self.session.player.play()
         self.session.process_events()
 
     def add_to_starred(self, track):
-        track.starred = True
-        print 'Track starred'
+        if track.starred:
+            print '"{0}" already starred'.format(track.name)
+        else:
+            track.starred = True
+            print '"{0}" starred'.format(track.name)
 
 class Playlist(object):
     def __init__(self, session):
-        self.index = 0 #kommer denne til å bli satt til 0 hver gang en funksjon
-        # i denne klassen kalles?
+        self.index = 0
         self.session = session
         self.playlist = list()
         self.genre = None
+        self.currentPlaylist = None
 
     def new_playlist(self, genre):
-        #self.genre = genre
         random_start = random.randint(0, 10)
         random_amount = random.randint(40, 100)
         search = self.session.search(genre, None, random_start, random_amount)
@@ -158,7 +195,7 @@ class Playlist(object):
         
     def next_song(self, genre):
         self.playlist = genre
-        print self.playlist
+        self.currentPlaylist = genre
         song = self.playlist[self.index]
         self.index += 1
         if self.index >= len(self.playlist):
