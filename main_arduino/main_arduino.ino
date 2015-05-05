@@ -39,7 +39,8 @@ void setup() {
 }
 
 void loop() {
- //Lang if-setning som sjekker alle sensor-input og sender bokstaver til SerialPort
+ //Lang if-setning som sjekker alle sensor-input og sender 
+ //bokstaver til SerialPort, samt fader lyset til en bestemt farge.
   
 if (Hall1.MagnetIsHere() == true)
   {
