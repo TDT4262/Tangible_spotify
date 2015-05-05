@@ -26,7 +26,7 @@ class SpotifyPlayer(object):
             spotify.SessionEvent.CONNECTION_STATE_UPDATED,
             connection_state_listener)
 
-        session.login('klevemar', '#TDT*4262')
+        session.login('username', 'password')
         while not logged_in_event.wait(0.1):
             session.process_events()  # waits until the login is complete
 
