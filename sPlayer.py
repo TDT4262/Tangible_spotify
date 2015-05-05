@@ -16,7 +16,7 @@ class SpotifyPlayer(object):
         loop = spotify.EventLoop(session)
         loop.start()
 
-        # Event functions
+        # Event function checking that login is complete
         def connection_state_listener(session):
             if session.connection.state is spotify.ConnectionState.LOGGED_IN:
                 logged_in_event.set()
@@ -36,6 +36,14 @@ class SpotifyPlayer(object):
         self.currentTrack = None
         self.currentPlaylist = None
 
+<<<<<<< Updated upstream
+=======
+        #Scrobbling to last.fm
+        """social = spotify.social.Social(session)
+        social.set_social_credentials(2, 'klevemar', '#TDT*4262')
+        print social.set_scrobbling(2, 4)"""
+
+>>>>>>> Stashed changes
         # Create playlist
         self.edm = self.playlist.new_playlist('genre:EDM')
         self.singerSongwriter = self.playlist.new_playlist('genre:"singer/songwriter"')
@@ -58,17 +66,28 @@ class SpotifyPlayer(object):
         self.indierock = self.playlist.new_playlist('genre:indierock')
         print '100 % lastet, klar til bruk'
 
+<<<<<<< Updated upstream
         # Handle next song in the same playlist
         session.on(
             spotify.SessionEvent.END_OF_TRACK, 
             self.player.next_song)
+=======
+        # Handle next song within the same playlist
+        session.on(
+            spotify.SessionEvent.END_OF_TRACK, 
+            self.next_song_in_playlist)
+>>>>>>> Stashed changes
 
     def play_playlist(self, genre):
         #start_time = time.time()
         self.playlist = genre
         self.currentTrack = self.player.next_song(self.playlist)
         #print 'Time elapsed: ' + str(time.time() - start_time)
+<<<<<<< Updated upstream
         
+=======
+  
+>>>>>>> Stashed changes
     def change_genre(self, state):
         if state == 'a':
             self.currentPlaylist = self.edm
@@ -134,8 +153,16 @@ class SpotifyPlayer(object):
         elif state =='u':
             if not self.currentTrack == None:
                 self.player.add_to_starred(self.currentTrack)
+<<<<<<< Updated upstream
             
 
+=======
+
+    def next_song_in_playlist(self, s=None):
+        self.player.stop()
+        self.currentTrack = self.player.next_song(self.currentPlaylist)  
+            
+>>>>>>> Stashed changes
 class Player(object):
     def __init__(self, session, playlist):
         assert isinstance(session, spotify.Session)
@@ -143,17 +170,28 @@ class Player(object):
 
         self.session = session
         self.playlist = playlist
+<<<<<<< Updated upstream
         self.currentTrack = None
         self.currentPlaylist = None
+=======
+        #self.currentTrack = None
+        #self.currentPlaylist = None
+>>>>>>> Stashed changes
 
         self.audio = spotify.PortAudioSink(session)
 
     def stop(self):
         self.session.player.unload()
 
+<<<<<<< Updated upstream
     def next_song(self, genre, s = None): #Må det stå s = None her?
         self.stop()
         self.currentPlaylist = genre
+=======
+    def next_song(self, genre, s=None): #Må det stå s = None her?
+        self.stop()
+        #self.currentPlaylist = genre
+>>>>>>> Stashed changes
         self.currentTrack = self.playlist.next_song(genre)
         self.play_song(self.currentTrack)
         return self.currentTrack
@@ -183,8 +221,13 @@ class Playlist(object):
         self.index = 0
         self.session = session
         self.playlist = list()
+<<<<<<< Updated upstream
         self.genre = None
         self.currentPlaylist = None
+=======
+        #self.genre = None
+        #self.currentPlaylist = None
+>>>>>>> Stashed changes
 
     def new_playlist(self, genre):
         random_start = random.randint(0, 10)
@@ -194,10 +237,15 @@ class Playlist(object):
         return search.tracks
         
     def next_song(self, genre):
+<<<<<<< Updated upstream
         self.playlist = genre
         self.currentPlaylist = genre
         song = self.playlist[self.index]
         self.index += 1
         if self.index >= len(self.playlist):
             self.index = 0
+=======
+        self.index = random.randint(1,len(genre))
+        song = genre[self.index]
+>>>>>>> Stashed changes
         return song
